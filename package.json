@@ -2,7 +2,7 @@
   "name": "concept-site",
   "version": "1.0.0",
   "scripts": {
-    "build": "cleancss -o dist/styles.css styles.css && cp index.html dist/ && cp favicon.svg dist/ && cp robots.txt dist/",
+    "build": "cleancss -o dist/styles.css styles.css && cp index.html dist/ && cp favicon.svg dist/ && cp robots.txt dist/ && mkdir -p dist/assets/Fonts && cp assets/Fonts/* dist/assets/Fonts/",
     "deploy": "npm run build && wrangler deploy"
   },
   "devDependencies": {
