@@ -89,7 +89,7 @@ body {
 .eyebrow {
   margin: 0;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   font-size: 0.72rem;
   color: var(--muted);
 }
@@ -97,7 +97,7 @@ body {
 h1 {
   margin: 0.6rem 0 0;
   font-size: clamp(2rem, 4.5vw, 3.6rem);
-  line-height: 1.02;
+  line-height: 1;
 }
 
 .lead {
@@ -123,6 +123,7 @@ h1 {
 .email:hover,
 .email:focus-visible {
   text-decoration: underline;
+  text-underline-offset: 0.14em;
 }
 
 .sidebar {
@@ -144,8 +145,8 @@ h1 {
 
 .sidebar-section {
   border-top: 1px solid var(--line);
-  padding-top: 0.7rem;
-  margin-top: 0.7rem;
+  padding-top: 0.8rem;
+  margin-top: 0.8rem;
 }
 
 .sidebar-section:first-child {
@@ -204,7 +205,7 @@ h1 {
 
 .projects {
   border-top: 1px solid var(--line);
-  padding-top: 1.2rem;
+  padding-top: 1rem;
 }
 
 .section-title {
@@ -241,18 +242,20 @@ h1 {
 
 .project-card h3 {
   margin: 0;
-  font-size: 1rem;
+  font-size: 0.98rem;
 }
 
 .project-card-link:hover h3,
 .project-card-link:focus-visible h3 {
   text-decoration: underline;
+  text-underline-offset: 0.14em;
 }
 
 .project-card p {
   margin: 0;
   color: var(--muted);
   line-height: 1.5;
+  max-width: 56ch;
 }
 
 .links {
@@ -272,13 +275,24 @@ h1 {
 .links a:hover,
 .links a:focus-visible {
   text-decoration: underline;
+  text-underline-offset: 0.14em;
 }
 
 .states {
   border-left: 1px solid var(--line);
   padding-left: 1rem;
-  border-top: 1px solid var(--line);
   padding-top: 0.8rem;
+  position: relative;
+}
+
+.states::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 1rem;
+  right: 0;
+  height: 1px;
+  background: var(--line);
 }
 
 .states ul {
@@ -300,6 +314,7 @@ h1 {
 .states a:focus-visible {
   color: var(--ink);
   text-decoration: underline;
+  text-underline-offset: 0.14em;
 }
 
 [data-reveal] {
