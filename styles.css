@@ -122,7 +122,7 @@ h1 {
 }
 
 .email {
-  color: var(--ink);
+  color: var(--accent);
   text-decoration: none;
 }
 
@@ -130,6 +130,7 @@ h1 {
 .email:focus-visible {
   text-decoration: underline;
   text-underline-offset: 0.14em;
+  color: var(--accent);
 }
 
 .sidebar {
@@ -174,8 +175,9 @@ h1 {
 }
 
 .chip-list li {
-  border: 1px solid var(--line);
-  padding: 0.2rem 0.45rem;
+  border: 0;
+  padding: 0.25rem 0.55rem;
+  background: #efe8de;
 }
 
 .timeline {
@@ -283,6 +285,7 @@ h1 {
 .links a:focus-visible {
   text-decoration: underline;
   text-underline-offset: 0.14em;
+  color: var(--accent);
 }
 
 .states {
@@ -311,8 +314,7 @@ h1 {
 }
 
 .states a {
-  color: var(--ink);
-  opacity: 0.7;
+  color: var(--accent);
   text-decoration: none;
   font-family: "IBM Plex Mono", monospace;
   font-size: 0.82rem;
@@ -320,10 +322,9 @@ h1 {
 
 .states a:hover,
 .states a:focus-visible {
-  color: var(--ink);
-  opacity: 1;
   text-decoration: underline;
   text-underline-offset: 0.14em;
+  color: var(--accent);
 }
 
 [data-reveal] {
