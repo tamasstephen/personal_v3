@@ -33,13 +33,13 @@ body {
 .column-left {
   grid-column: 1 / span 8;
   display: grid;
-  gap: 1.1rem;
+  gap: 1.4rem;
 }
 
 .column-right {
   grid-column: 9 / span 4;
   display: grid;
-  gap: 1.1rem;
+  gap: 0.9rem;
 }
 
 .top {
@@ -128,6 +128,7 @@ h1 {
 .sidebar {
   border-left: 1px solid var(--line);
   padding-left: 1rem;
+  font-size: 0.95rem;
 }
 
 .sidebar h2,
@@ -161,7 +162,7 @@ h1 {
   flex-wrap: wrap;
   gap: 0.4rem;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 0.78rem;
+  font-size: 0.74rem;
   color: var(--muted);
 }
 
@@ -197,12 +198,13 @@ h1 {
 .timeline p {
   margin: 0.4rem 0 0;
   color: var(--muted);
+  font-size: 0.92rem;
   line-height: 1.5;
 }
 
 .projects {
   border-top: 1px solid var(--line);
-  padding-top: 0.8rem;
+  padding-top: 1.2rem;
 }
 
 .section-title {
@@ -220,7 +222,7 @@ h1 {
 .project-list {
   margin-top: 0.9rem;
   display: grid;
-  gap: 0.8rem;
+  gap: 0.7rem;
 }
 
 .project-card {
@@ -275,6 +277,8 @@ h1 {
 .states {
   border-left: 1px solid var(--line);
   padding-left: 1rem;
+  border-top: 1px solid var(--line);
+  padding-top: 0.8rem;
 }
 
 .states ul {
@@ -282,18 +286,19 @@ h1 {
   padding: 0;
   list-style: none;
   display: grid;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 .states a {
-  color: var(--ink);
+  color: var(--muted);
   text-decoration: none;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 0.86rem;
+  font-size: 0.82rem;
 }
 
 .states a:hover,
 .states a:focus-visible {
+  color: var(--ink);
   text-decoration: underline;
 }
 
