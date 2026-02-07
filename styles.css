@@ -395,6 +395,11 @@ button:focus-visible {
     gap: 1rem;
   }
 
+  .column-left,
+  .column-right {
+    gap: 1.4rem;
+  }
+
   .column-right {
     border-left: 0;
     padding-left: 0;
@@ -424,11 +429,33 @@ button:focus-visible {
 
   .projects,
   .states {
-    padding-top: 1rem;
+    margin-top: 0.4rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--line);
   }
 
   .top {
     grid-template-columns: 1fr;
     text-align: left;
+  }
+
+  .section-title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+
+  .sidebar {
+    margin-top: 0.4rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .states::before {
+    display: none;
+  }
+
+  .states ul {
+    margin-top: 0.6rem;
   }
 }
