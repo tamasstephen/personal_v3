@@ -490,6 +490,11 @@ a:focus-visible {
     min-height: 0;
   }
 
+  .contact-section h2 {
+    line-height: 0.95;
+    font-variation-settings: "wdth" 98;
+  }
+
   .contact-section ul {
     justify-self: start;
   }

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Social preview artwork</title>
+    <style>
+      @font-face {
+        font-family: "IBM Plex Sans";
+        src: url("Fonts/IBMPlexSans-VariableFont_wdth,wght.ttf");
+        font-weight: 100 900;
+      }
+      @font-face {
+        font-family: "IBM Plex Mono";
+        src: url("Fonts/IBMPlexMono-Regular.ttf");
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        width: 1200px;
+        height: 630px;
+        padding: 64px 80px;
+        background: #fff;
+        color: #111;
+        font-family: "IBM Plex Sans", sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      header, footer { display: flex; justify-content: space-between; align-items: center; }
+      header { font-size: 27px; font-weight: 500; }
+      .role, footer { font-family: "IBM Plex Mono", monospace; font-size: 20px; }
+      .role { color: #555; }
+      h1 { margin: 0; font-size: 96px; font-weight: 500; line-height: 1.05; letter-spacing: 0; }
+      footer { color: #555; }
+    </style>
+  </head>
+  <body>
+    <header><span>Tamás Stephen</span><span class="role">Frontend Engineer / Budapest</span></header>
+    <h1>I build<br />clear interfaces.</h1>
+    <footer><span>Selected work &amp; experience</span><span>tamasstephen.com</span></footer>
+  </body>
+</html>
