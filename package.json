@@ -2,11 +2,24 @@
   "name": "concept-site",
   "version": "1.0.0",
   "scripts": {
-    "build": "cleancss -o dist/styles.css styles.css && cp index.html dist/ && cp theme.js dist/ && cp favicon.svg dist/ && cp robots.txt dist/ && mkdir -p dist/assets/Fonts && cp assets/Fonts/* dist/assets/Fonts/ && cp assets/social-preview.png dist/assets/",
-    "deploy": "npm run build && wrangler deploy"
+    "build": "npm run bundle && mkdir -p dist/assets/Fonts && cleancss -o dist/styles.css styles.css && cleancss -o dist/motion.css motion.css && cp index.html motion.bundle.js favicon.svg robots.txt dist/ && cp assets/Fonts/Inter-Variable.woff2 assets/Fonts/Inter-LICENSE.txt assets/Fonts/IBMPlexMono-Regular.ttf dist/assets/Fonts/ && cp assets/social-preview.png dist/assets/",
+    "deploy": "npm run build && wrangler deploy",
+    "dev": "npm run bundle && python3 -m http.server 4173 --bind 127.0.0.1",
+    "test": "node --test tests/*.test.mjs",
+    "test:browser": "playwright test",
+    "lint": "eslint .",
+    "typecheck": "tsc -p jsconfig.json",
+    "bundle": "esbuild motion.js --bundle --format=iife --target=es2022 --outfile=motion.bundle.js"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.58.2",
     "clean-css-cli": "^5.6.3",
+    "esbuild": "^0.28.2",
+    "eslint": "^10.12.0",
+    "globals": "^17.13.0",
+    "typescript": "^7.0.2",
     "wrangler": "^3.110.0"
-  }
+  },
+  "type": "module"
 }
