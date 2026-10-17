@@ -11,5 +11,5 @@
     "moduleResolution": "NodeNext",
     "lib": ["ES2022", "DOM"]
   },
-  "include": ["motion.js", "motion-model.mjs"]
+  "include": ["site.js", "site-model.mjs"]
 }

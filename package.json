@@ -2,14 +2,14 @@
   "name": "concept-site",
   "version": "1.0.0",
   "scripts": {
-    "build": "npm run bundle && mkdir -p dist/assets/Fonts && cleancss -o dist/styles.css styles.css && cleancss -o dist/motion.css motion.css && cp index.html motion.bundle.js favicon.svg robots.txt dist/ && cp assets/Fonts/Inter-Variable.woff2 assets/Fonts/Inter-LICENSE.txt assets/Fonts/IBMPlexMono-Regular.ttf dist/assets/Fonts/ && cp assets/social-preview.png dist/assets/",
+    "build": "npm run bundle && rm -rf dist && mkdir -p dist/assets/Fonts dist/assets/work && cleancss -o dist/styles.css styles.css && cp index.html site.bundle.js favicon.svg robots.txt dist/ && cp assets/Fonts/Inter-Variable.woff2 assets/Fonts/Inter-LICENSE.txt assets/Fonts/IBMPlexMono-Regular.ttf dist/assets/Fonts/ && cp assets/social-preview.png dist/assets/ && cp assets/work/* dist/assets/work/",
     "deploy": "npm run build && wrangler deploy",
     "dev": "npm run bundle && python3 -m http.server 4173 --bind 127.0.0.1",
     "test": "node --test tests/*.test.mjs",
     "test:browser": "playwright test",
     "lint": "eslint .",
     "typecheck": "tsc -p jsconfig.json",
-    "bundle": "esbuild motion.js --bundle --format=iife --target=es2022 --outfile=motion.bundle.js"
+    "bundle": "esbuild site.js --bundle --format=iife --target=es2022 --outfile=site.bundle.js"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
