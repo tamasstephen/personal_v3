@@ -1,4 +1,6 @@
-import { getNextOpenProject } from './site-model.mjs';
+import { getNextOpenProject, getOppositeTheme, getToggleLabel, resolveTheme } from './site-model.mjs';
+
+const themeTransitionMs = 180;
 
 /** @param {ParentNode} root */
 function initProjects(root) {
@@ -24,4 +26,42 @@ function renderOpenProject(work, openId) {
   }
 }
 
+/** @param {HTMLButtonElement} button */
+function initThemeToggle(button) {
+  const root = document.documentElement;
+  renderToggleLabel(button, readCurrentTheme());
+  button.hidden = false;
+  button.addEventListener('click', () => {
+    const nextTheme = getOppositeTheme(readCurrentTheme());
+    root.classList.add('theme-transition');
+    root.dataset.theme = nextTheme;
+    renderToggleLabel(button, nextTheme);
+    storeTheme(nextTheme);
+    setTimeout(() => root.classList.remove('theme-transition'), themeTransitionMs);
+  });
+}
+
+/** @returns {import('./site-model.mjs').Theme} */
+function readCurrentTheme() {
+  return resolveTheme({ storedTheme: document.documentElement.dataset.theme, prefersDark: matchMedia('(prefers-color-scheme: dark)').matches });
+}
+
+/** @param {HTMLButtonElement} button @param {import('./site-model.mjs').Theme} theme */
+function renderToggleLabel(button, theme) {
+  const label = getToggleLabel(theme);
+  button.textContent = label.text;
+  button.setAttribute('aria-label', label.ariaLabel);
+}
+
+/** @param {import('./site-model.mjs').Theme} theme */
+function storeTheme(theme) {
+  try {
+    localStorage.setItem('theme', theme);
+  } catch (error) {
+    console.warn('Theme preference not saved; storage is unavailable.', error);
+  }
+}
+
 initProjects(document);
+const themeToggle = document.querySelector('.theme-toggle');
+if (themeToggle instanceof HTMLButtonElement) initThemeToggle(themeToggle);

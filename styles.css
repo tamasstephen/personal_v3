@@ -238,6 +238,10 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--color-primary);
   .colophon { flex-direction: column; align-items: flex-start; gap: 8px; }
 }
 
+/* Theme crossfade, only while switching so load and hover states are unaffected. */
+.theme-transition body, .theme-transition body * { transition: background-color 180ms ease-out, color 180ms ease-out, border-color 180ms ease-out !important; }
+
 @media (prefers-reduced-motion: reduce) {
+  .theme-transition body, .theme-transition body * { transition: none !important; }
   .project-panel, .project[data-open='false'] .project-panel, .project-icon::after { transition: none; }
 }

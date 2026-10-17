@@ -149,3 +149,64 @@ test('panels animate when motion is allowed', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('#panel-cv-peers')).toHaveCSS('transition-duration', /0\.24s/);
 });
+
+const bodyBackground = page => page.evaluate(() => getComputedStyle(document.body).backgroundColor);
+
+test('follows system dark on first visit', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.goto('/');
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  expect(await bodyBackground(page)).toBe('rgb(10, 10, 10)');
+  await expect(page.locator('.theme-toggle')).toHaveText('Light');
+  await expect(page.locator('.theme-toggle')).toHaveAttribute('aria-label', 'Switch to light mode');
+});
+
+test('explicit choice persists across reload', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.goto('/');
+  await page.locator('.theme-toggle').click();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  await page.reload();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  expect(await page.evaluate(() => localStorage.getItem('theme'))).toBe('dark');
+});
+
+test('stored light beats system dark', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('theme', 'light'));
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.goto('/');
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+  expect(await bodyBackground(page)).toBe('rgb(255, 255, 255)');
+});
+
+test('system change does not override explicit choice', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.goto('/');
+  await page.locator('.theme-toggle').click();
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.emulateMedia({ colorScheme: 'light' });
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  await expect.poll(() => bodyBackground(page)).toBe('rgb(10, 10, 10)');
+});
+
+test('works when localStorage throws', async ({ page }) => {
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.addInitScript(() => {
+    Object.defineProperty(window, 'localStorage', { get() { throw new DOMException('blocked', 'SecurityError'); } });
+  });
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.goto('/');
+  await page.locator('.theme-toggle').click();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  expect(errors).toEqual([]);
+});
+
+test('no-JS honors system dark', async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false, colorScheme: 'dark' });
+  const page = await context.newPage();
+  await page.goto('http://127.0.0.1:4173/');
+  expect(await bodyBackground(page)).toBe('rgb(10, 10, 10)');
+  await expect(page.locator('.theme-toggle')).toBeHidden();
+  await context.close();
+});

@@ -2,6 +2,17 @@
 <html lang="en" class="no-js">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      // Runs before first paint to avoid a flash of the wrong theme. Mirrors resolveTheme in site-model.mjs.
+      (function () {
+        var root = document.documentElement;
+        var stored = null;
+        try { stored = localStorage.getItem('theme'); } catch (error) { stored = null; }
+        var prefersDark = matchMedia('(prefers-color-scheme: dark)').matches;
+        root.className = root.className.replace('no-js', 'js');
+        root.dataset.theme = stored === 'light' || stored === 'dark' ? stored : prefersDark ? 'dark' : 'light';
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tamás Stephen - Frontend Engineer</title>
     <meta
@@ -10,7 +21,8 @@
     />
     <meta name="author" content="Tamás Stephen" />
     <meta name="robots" content="index, follow" />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
     <link rel="canonical" href="https://tamasstephen.com/" />
 
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
