@@ -29,8 +29,11 @@ function renderOpenProject(work, openId) {
 /** @param {HTMLButtonElement} button */
 function initThemeToggle(button) {
   const root = document.documentElement;
+  const systemDark = matchMedia('(prefers-color-scheme: dark)');
   renderToggleLabel(button, readCurrentTheme());
   button.hidden = false;
+  // Without an explicit choice the CSS follows the system; keep the label in step with it.
+  systemDark.addEventListener('change', () => renderToggleLabel(button, readCurrentTheme()));
   button.addEventListener('click', () => {
     const nextTheme = getOppositeTheme(readCurrentTheme());
     root.classList.add('theme-transition');
@@ -78,6 +81,7 @@ function initReveal(root) {
     }
   }, { threshold: 0.15 });
   for (const section of sections) observer.observe(section);
+  document.documentElement.classList.add('reveal-ready');
 }
 
 initProjects(document);

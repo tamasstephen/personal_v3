@@ -39,8 +39,10 @@
   }
   function initThemeToggle(button) {
     const root = document.documentElement;
+    const systemDark = matchMedia("(prefers-color-scheme: dark)");
     renderToggleLabel(button, readCurrentTheme());
     button.hidden = false;
+    systemDark.addEventListener("change", () => renderToggleLabel(button, readCurrentTheme()));
     button.addEventListener("click", () => {
       const nextTheme = getOppositeTheme(readCurrentTheme());
       root.classList.add("theme-transition");
@@ -80,6 +82,7 @@
       }
     }, { threshold: 0.15 });
     for (const section of sections) observer.observe(section);
+    document.documentElement.classList.add("reveal-ready");
   }
   initProjects(document);
   initReveal(document);

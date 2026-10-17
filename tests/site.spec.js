@@ -155,7 +155,7 @@ const bodyBackground = page => page.evaluate(() => getComputedStyle(document.bod
 test('follows system dark on first visit', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'dark' });
   await page.goto('/');
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  await expect(page.locator('html')).not.toHaveAttribute('data-theme', /.+/);
   expect(await bodyBackground(page)).toBe('rgb(10, 10, 10)');
   await expect(page.locator('.theme-toggle')).toHaveText('Light');
   await expect(page.locator('.theme-toggle')).toHaveAttribute('aria-label', 'Switch to light mode');
@@ -249,4 +249,35 @@ test('hero arrives with a short stagger', async ({ page }) => {
     expect(duration).toBe('0.42s');
     expect(delay).toBe({ 0: '0s', 1: '0.08s', 2: '0.16s' }[step]);
   }
+});
+
+test('content stays visible when the bundle fails to load', async ({ page }) => {
+  await page.route('**/site.bundle.js', route => route.abort());
+  await page.goto('/');
+  await page.evaluate(() => scrollTo(0, document.body.scrollHeight));
+  await page.waitForTimeout(500);
+  const opacities = await page.locator('[data-reveal] > *').evaluateAll(nodes => nodes.map(node => getComputedStyle(node).opacity));
+  expect(opacities.every(opacity => opacity === '1')).toBe(true);
+});
+
+test('printing before scrolling shows every section', async ({ page }) => {
+  await page.goto('/');
+  await page.emulateMedia({ media: 'print' });
+  const opacities = await page.locator('[data-reveal] > *').evaluateAll(nodes => nodes.map(node => getComputedStyle(node).opacity));
+  expect(opacities.every(opacity => opacity === '1')).toBe(true);
+});
+
+test('header controls stay inside the gutter at 320px', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 700 });
+  await page.goto('/');
+  const rightEdges = await page.locator('.topbar a:visible, .topbar button:visible').evaluateAll(nodes => nodes.map(node => node.getBoundingClientRect().right));
+  expect(Math.max(...rightEdges)).toBeLessThanOrEqual(320 - 20);
+});
+
+test('without a stored choice the page follows a system theme change', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.goto('/');
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await expect.poll(() => bodyBackground(page)).toBe('rgb(10, 10, 10)');
+  await expect(page.locator('.theme-toggle')).toHaveText('Light');
 });

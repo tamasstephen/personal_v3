@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <script>
-      // Runs before first paint to avoid a flash of the wrong theme. Mirrors resolveTheme in site-model.mjs.
+      // Runs before first paint to avoid a flash of the wrong theme. Mirrors the stored-choice rule of resolveTheme in site-model.mjs.
       (function () {
         var root = document.documentElement;
         var stored = null;
         try { stored = localStorage.getItem('theme'); } catch (error) { stored = null; }
-        var prefersDark = matchMedia('(prefers-color-scheme: dark)').matches;
         root.className = root.className.replace('no-js', 'js');
-        root.dataset.theme = stored === 'light' || stored === 'dark' ? stored : prefersDark ? 'dark' : 'light';
+        // Only an explicit choice pins the theme; otherwise CSS color-scheme follows the system live.
+        if (stored === 'light' || stored === 'dark') root.dataset.theme = stored;
       })();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
