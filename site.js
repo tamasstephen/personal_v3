@@ -62,6 +62,25 @@ function storeTheme(theme) {
   }
 }
 
+/** @param {ParentNode} root */
+function initReveal(root) {
+  const sections = Array.from(root.querySelectorAll('[data-reveal]'));
+  const prefersReducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (typeof IntersectionObserver !== 'function' || prefersReducedMotion) {
+    for (const section of sections) section.classList.add('is-visible');
+    return;
+  }
+  const observer = new IntersectionObserver(entries => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      entry.target.classList.add('is-visible');
+      observer.unobserve(entry.target);
+    }
+  }, { threshold: 0.15 });
+  for (const section of sections) observer.observe(section);
+}
+
 initProjects(document);
+initReveal(document);
 const themeToggle = document.querySelector('.theme-toggle');
 if (themeToggle instanceof HTMLButtonElement) initThemeToggle(themeToggle);

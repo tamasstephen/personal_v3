@@ -238,6 +238,21 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--color-primary);
   .colophon { flex-direction: column; align-items: flex-start; gap: 8px; }
 }
 
+/* Arrival and scroll reveal: scoped to .js + no-preference so content is visible without JS or with reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-arrival] { animation: arrive 420ms ease-out both; }
+  .js [data-arrival='1'] { animation-delay: 80ms; }
+  .js [data-arrival='2'] { animation-delay: 160ms; }
+  .js [data-reveal] > * { transition: opacity 360ms ease-out, transform 360ms ease-out; }
+  .js [data-reveal]:not(.is-visible) > * { opacity: 0; transform: translateY(8px); }
+  .js [data-reveal] > :nth-child(2) { transition-delay: 60ms; }
+  .js [data-reveal] > :nth-child(n + 3) { transition-delay: 120ms; }
+}
+@keyframes arrive {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
 /* Theme crossfade, only while switching so load and hover states are unaffected. */
 .theme-transition body, .theme-transition body * { transition: background-color 180ms ease-out, color 180ms ease-out, border-color 180ms ease-out !important; }
 

@@ -210,3 +210,43 @@ test('no-JS honors system dark', async ({ browser }) => {
   await expect(page.locator('.theme-toggle')).toBeHidden();
   await context.close();
 });
+
+test('sections reveal once when scrolled into view', async ({ page }) => {
+  await page.goto('/');
+  const experience = page.locator('#experience');
+  await expect(experience).not.toHaveClass(/is-visible/);
+  expect(await experience.locator('> *').first().evaluate(node => getComputedStyle(node).opacity)).toBe('0');
+  await experience.scrollIntoViewIfNeeded();
+  await expect(experience).toHaveClass(/is-visible/);
+  await page.evaluate(() => scrollTo(0, 0));
+  await experience.scrollIntoViewIfNeeded();
+  await expect(experience).toHaveClass(/is-visible/);
+});
+
+test('reduced motion shows everything at once', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  const styles = await page.locator('[data-reveal] > *, [data-arrival]').evaluateAll(nodes => nodes.map(node => [getComputedStyle(node).opacity, getComputedStyle(node).transform]));
+  expect(styles.every(([opacity, transform]) => opacity === '1' && transform === 'none')).toBe(true);
+});
+
+test('missing IntersectionObserver reveals everything', async ({ page }) => {
+  await page.addInitScript(() => Object.defineProperty(window, 'IntersectionObserver', { value: undefined }));
+  await page.goto('/');
+  for (const section of await page.locator('[data-reveal]').all()) await expect(section).toHaveClass(/is-visible/);
+});
+
+test('anchor jump to an unrevealed section shows it', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('link', { name: 'Experience' }).click();
+  await expect(page.locator('#experience')).toHaveClass(/is-visible/, { timeout: 1000 });
+});
+
+test('hero arrives with a short stagger', async ({ page }) => {
+  await page.goto('/');
+  const delays = await page.locator('[data-arrival]').evaluateAll(nodes => nodes.map(node => [node.getAttribute('data-arrival'), getComputedStyle(node).animationDelay, getComputedStyle(node).animationDuration]));
+  for (const [step, delay, duration] of delays) {
+    expect(duration).toBe('0.42s');
+    expect(delay).toBe({ 0: '0s', 1: '0.08s', 2: '0.16s' }[step]);
+  }
+});
