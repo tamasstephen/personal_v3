@@ -127,12 +127,13 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--color-primary);
 .project-description { font-size: 14px; line-height: 20px; color: var(--color-text-secondary); }
 .project-icon { grid-column: -2; position: relative; display: block; width: 44px; height: 44px; border: 1px solid var(--color-border); border-radius: var(--radius-control); }
 .project-icon::before, .project-icon::after { content: ''; position: absolute; top: 50%; left: 50%; width: 11px; height: 1.5px; margin: -.75px 0 0 -5.5px; border-radius: 1px; background: var(--color-text); }
-.project-icon::after { transform: rotate(90deg); }
+.project-icon::after { transform: rotate(90deg); transition: transform 180ms ease-out; }
+.project[data-open='true'] .project-icon::after { transition-duration: 240ms; }
 .project[data-open='true'] .project-icon::after { transform: rotate(0deg); }
 .project-domain { grid-column: 3; grid-row: 1; position: relative; z-index: 1; display: inline-flex; align-items: center; justify-self: start; min-height: 44px; font-size: 12px; line-height: 20px; color: var(--color-primary); }
 .project-domain:hover { text-decoration: underline; text-underline-offset: 4px; }
-.project-panel { display: grid; grid-template-rows: 1fr; }
-.project[data-open='false'] .project-panel { grid-template-rows: 0fr; opacity: 0; visibility: hidden; }
+.project-panel { display: grid; grid-template-rows: 1fr; transition: grid-template-rows 240ms ease-out, opacity 240ms ease-out, visibility 0s; }
+.project[data-open='false'] .project-panel { grid-template-rows: 0fr; opacity: 0; visibility: hidden; transition-duration: 180ms, 180ms, 0s; transition-delay: 0s, 0s, 180ms; }
 .project-panel-inner { min-height: 0; overflow: hidden; }
 .project-panel-inner > .preview { margin-bottom: 32px; }
 
@@ -235,4 +236,8 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--color-primary);
   .statement-contact { font-size: 48px; line-height: 52px; }
   .contact-details { flex-basis: auto; width: 100%; }
   .colophon { flex-direction: column; align-items: flex-start; gap: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-panel, .project[data-open='false'] .project-panel, .project-icon::after { transition: none; }
 }

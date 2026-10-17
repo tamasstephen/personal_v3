@@ -88,3 +88,64 @@ test('explore my work targets selected work', async ({ page }) => {
   await page.getByRole('link', { name: /Explore my work/ }).click();
   await expect(page).toHaveURL(/#work$/);
 });
+
+const toggle = (page, project) => page.locator(`.project[data-project="${project}"] .project-toggle`);
+const article = (page, project) => page.locator(`.project[data-project="${project}"]`);
+
+async function expectAriaMatchesState(page) {
+  const states = await page.locator('.project').evaluateAll(projects => projects.map(project => [project.getAttribute('data-open'), project.querySelector('.project-toggle')?.getAttribute('aria-expanded')]));
+  for (const [open, expanded] of states) expect(expanded).toBe(open);
+}
+
+test('opening a project closes the others', async ({ page }) => {
+  await page.goto('/');
+  await toggle(page, 'stephen-beratung').click();
+  await expect(article(page, 'stephen-beratung')).toHaveAttribute('data-open', 'true');
+  await expect(toggle(page, 'stephen-beratung')).toHaveAttribute('aria-expanded', 'true');
+  await expect(article(page, 'cv-peers')).toHaveAttribute('data-open', 'false');
+  await expect(toggle(page, 'cv-peers')).toHaveAttribute('aria-expanded', 'false');
+  await expect(page.locator('#panel-stephen-beratung')).toBeVisible();
+  await expect(page.locator('#panel-cv-peers')).toBeHidden();
+});
+
+test('rapid switching leaves exactly one open', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => {
+    for (const id of ['stephen-beratung', 'curators-path']) document.querySelector(`.project[data-project="${id}"] .project-toggle`)?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+  });
+  await expect(page.locator('.project[data-open="true"]')).toHaveCount(1);
+  await expect(article(page, 'curators-path')).toHaveAttribute('data-open', 'true');
+  await expectAriaMatchesState(page);
+});
+
+test('clicking the open project closes it', async ({ page }) => {
+  await page.goto('/');
+  await toggle(page, 'cv-peers').click();
+  await expect(page.locator('.project[data-open="true"]')).toHaveCount(0);
+  await expectAriaMatchesState(page);
+});
+
+test('keyboard toggles and keeps focus', async ({ page }) => {
+  await page.goto('/');
+  const button = toggle(page, 'stephen-beratung');
+  await button.focus();
+  await page.keyboard.press('Enter');
+  await expect(article(page, 'stephen-beratung')).toHaveAttribute('data-open', 'true');
+  await page.keyboard.press('Space');
+  await expect(article(page, 'stephen-beratung')).toHaveAttribute('data-open', 'false');
+  await expect(button).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(page.locator('.project[data-project="stephen-beratung"] .project-domain')).toBeFocused();
+});
+
+test('reduced motion opens instantly', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  const durations = await page.locator('.project-panel, .project-icon').evaluateAll(nodes => nodes.flatMap(node => getComputedStyle(node).transitionDuration.split(', ')));
+  expect(durations.every(duration => duration === '0s')).toBe(true);
+});
+
+test('panels animate when motion is allowed', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#panel-cv-peers')).toHaveCSS('transition-duration', /0\.24s/);
+});
