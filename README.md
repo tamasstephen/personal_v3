@@ -34,7 +34,7 @@ Unit tests (`npm test`) cover the theme and accordion logic. Browser checks use 
 - `site-model.mjs`: pure, unit-tested theme resolution and accordion state.
 - `site.js`: DOM wiring for the accordion, theme toggle, and scroll reveal.
 - `site.bundle.js`: generated browser script; edit the sources above, then rebuild.
-- `assets/work/`: project preview artwork. CV Peers and Stephen Beratung are Paper exports; regenerate the Curator's Path screenshot with `node scripts/capture-curators-path.mjs`.
+- `assets/work/`: project preview artwork. CV Peers and Stephen Beratung are Paper exports; regenerate the Follow Me to Budapest screenshot with `node scripts/capture-follow-me-to-budapest.mjs`.
 
 Inter is self-hosted in WOFF2 format under the included SIL Open Font License. The existing IBM Plex Mono provides the monospace labels in place of Paper's canvas font.
 
